@@ -1,0 +1,120 @@
+openapi: 3.0.1
+info:
+  title: API Rest - Adopciones
+  version: 1.0.0
+  description: Documentación de la API — módulo Users
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+tags:
+  - name: Users
+    description: Endpoints para la gestión de usuarios del sistema
+
+paths:
+  /api/users:
+    get:
+      summary: Obtener todos los usuarios
+      tags: [Users]
+      responses:
+        200:
+          description: Lista de usuarios obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+        500:
+          description: Error interno del servidor
+
+    post:
+      summary: Crear un nuevo usuario
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Datos inválidos o faltantes
+
+  /api/users/{id}:
+    put:
+      summary: Actualizar un usuario por su ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del usuario a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: Usuario actualizado correctamente
+        404:
+          description: Usuario no encontrado
+
+    delete:
+      summary: Eliminar un usuario por su ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del usuario a eliminar
+      responses:
+        200:
+          description: Usuario eliminado correctamente
+        404:
+          description: Usuario no encontrado
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - email
+      properties:
+        _id:
+          type: string
+          example: 6541abc123f0e3f97a5c2b9d
+        first_name:
+          type: string
+          example: Franco
+        last_name:
+          type: string
+          example: Picini
+        email:
+          type: string
+          format: email
+          example: francopicini@franqito.com
+        role:
+          type: string
+          example: user
